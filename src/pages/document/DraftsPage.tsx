@@ -360,7 +360,10 @@ const DraftsPage: React.FC = () => {
           <Card>
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <Spin size="large" tip="加载中..." />
+                <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
               </div>
             ) : drafts.length === 0 ? (
               <Empty 

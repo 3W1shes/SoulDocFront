@@ -79,7 +79,14 @@ export const useAuthStore = create<AuthState>()(
       },
 
       refreshUser: async () => {
-        const token = localStorage.getItem('auth_token')
+        let token = localStorage.getItem('auth_token')
+        if (!token) {
+          const forumToken = localStorage.getItem('jwt_token')
+          if (forumToken) {
+            localStorage.setItem('auth_token', forumToken)
+            token = forumToken
+          }
+        }
         if (!token) {
           set({ user: null, isAuthenticated: false })
           return
@@ -87,8 +94,9 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           const response = await authService.getCurrentUser()
+          const user = (response as any)?.data ?? response
           set({ 
-            user: response.data, 
+            user, 
             isAuthenticated: true 
           })
         } catch (error) {

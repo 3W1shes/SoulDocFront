@@ -34,7 +34,7 @@ const NotificationDropdown: React.FC = () => {
 
   return (
     <Dropdown
-      dropdownRender={() => dropdownContent}
+      popupRender={() => dropdownContent}
       trigger={['click']}
       open={visible}
       onOpenChange={setVisible}

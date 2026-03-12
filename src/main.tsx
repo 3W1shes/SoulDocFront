@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { ConfigProvider } from 'antd'
+import { App as AntdApp, ConfigProvider } from 'antd'
 import { HelmetProvider } from 'react-helmet-async'
 import zhCN from 'antd/locale/zh_CN'
 import dayjs from 'dayjs'
@@ -17,7 +17,13 @@ dayjs.locale('zh-cn')
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HelmetProvider>
-      <BrowserRouter>
+      <BrowserRouter
+        basename="/docs"
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <ConfigProvider
           locale={zhCN}
           theme={{
@@ -28,7 +34,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             },
           }}
         >
-          <App />
+          <AntdApp>
+            <App />
+          </AntdApp>
         </ConfigProvider>
       </BrowserRouter>
     </HelmetProvider>

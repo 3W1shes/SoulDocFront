@@ -22,7 +22,7 @@ const OAuthCallbackPage: React.FC = () => {
         }
 
         // 使用 token 获取用户信息
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch('/api/docs/auth/me', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',

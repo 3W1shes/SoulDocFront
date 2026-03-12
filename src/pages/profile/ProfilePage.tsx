@@ -9,12 +9,11 @@ import {
   Row, 
   Col, 
   Tabs, 
-  message, 
+  App,
   Upload, 
   Space,
   Tag,
   Divider,
-  Modal,
   Spin
 } from 'antd'
 import { 
@@ -27,8 +26,7 @@ import {
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   LockOutlined,
-  CalendarOutlined,
-  LinkOutlined
+  CalendarOutlined
 } from '@ant-design/icons'
 import { useAuthStore } from '@/stores/authStore'
 import { authService } from '@/services/authService'
@@ -36,9 +34,9 @@ import type { UploadProps } from 'antd'
 import dayjs from 'dayjs'
 
 const { Title, Text, Paragraph } = Typography
-const { TabPane } = Tabs
 
 const ProfilePage: React.FC = () => {
+  const { message } = App.useApp()
   const { user, refreshUser, setUser } = useAuthStore()
   const [loading, setLoading] = useState(false)
   const [passwordLoading, setPasswordLoading] = useState(false)
@@ -143,6 +141,183 @@ const ProfilePage: React.FC = () => {
     }
   }
 
+  const tabItems = [
+    {
+      key: 'profile',
+      label: (
+        <span>
+          <UserOutlined />
+          基本信息
+        </span>
+      ),
+      children: (
+        <Form
+          form={profileForm}
+          layout="vertical"
+          initialValues={{
+            email: user?.email,
+          }}
+          onFinish={handleProfileUpdate}
+          className="max-w-2xl"
+        >
+          <Row gutter={24}>
+            <Col span={24}>
+              <Form.Item
+                label="邮箱"
+                name="email"
+              >
+                <Input 
+                  prefix={<MailOutlined />} 
+                  disabled 
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item>
+            <Button 
+              type="primary" 
+              htmlType="submit" 
+              loading={loading}
+              size="large"
+              disabled
+            >
+              保存修改
+            </Button>
+            <Text type="secondary" className="ml-4">
+              更多个人资料选项即将推出
+            </Text>
+          </Form.Item>
+        </Form>
+      ),
+    },
+    {
+      key: 'security',
+      label: (
+        <span>
+          <SafetyOutlined />
+          安全设置
+        </span>
+      ),
+      children: (
+        <div className="max-w-2xl">
+          <Title level={4} className="mb-4">
+            <LockOutlined className="mr-2" />
+            修改密码
+          </Title>
+          
+          {user?.has_password ? (
+            <Form
+              form={passwordForm}
+              layout="vertical"
+              onFinish={handlePasswordChange}
+            >
+              <Form.Item
+                label="当前密码"
+                name="current_password"
+                rules={[{ required: true, message: '请输入当前密码' }]}
+              >
+                <Input.Password size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="新密码"
+                name="new_password"
+                rules={[
+                  { required: true, message: '请输入新密码' },
+                  { min: 8, message: '密码至少8个字符' }
+                ]}
+              >
+                <Input.Password size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="确认新密码"
+                name="confirm_password"
+                rules={[
+                  { required: true, message: '请确认新密码' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('new_password') === value) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(new Error('两次输入的密码不一致'))
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password size="large" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button 
+                  type="primary" 
+                  htmlType="submit" 
+                  loading={passwordLoading}
+                  size="large"
+                >
+                  修改密码
+                </Button>
+              </Form.Item>
+            </Form>
+          ) : (
+            <Card className="bg-gray-50">
+              <Paragraph>
+                您当前使用第三方账号登录，暂未设置密码。
+                设置密码后，您可以使用邮箱和密码登录。
+              </Paragraph>
+              <Button type="primary" size="large">
+                设置密码
+              </Button>
+            </Card>
+          )}
+
+          <Divider />
+
+          <Title level={4} className="mb-4">
+            <SafetyOutlined className="mr-2" />
+            两步验证
+          </Title>
+          <Card className="bg-gray-50">
+            <Paragraph>
+              启用两步验证可以大幅提高账号安全性。即使密码泄露，
+              攻击者也无法登录您的账号。
+            </Paragraph>
+            <Button type="default" size="large" disabled>
+              即将推出
+            </Button>
+          </Card>
+        </div>
+      ),
+    },
+    {
+      key: 'preferences',
+      label: (
+        <span>
+          <SettingOutlined />
+          偏好设置
+        </span>
+      ),
+      children: (
+        <div className="max-w-2xl">
+          <Title level={4} className="mb-4">偏好设置</Title>
+          <Card className="bg-gray-50">
+            <Paragraph>
+              更多个性化设置选项即将推出，包括：
+            </Paragraph>
+            <ul className="list-disc list-inside text-gray-600">
+              <li>界面主题（亮色/暗色）</li>
+              <li>语言偏好</li>
+              <li>编辑器设置</li>
+              <li>通知偏好</li>
+              <li>隐私设置</li>
+            </ul>
+          </Card>
+        </div>
+      ),
+    },
+  ]
+
   if (!user) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -216,232 +391,7 @@ const ProfilePage: React.FC = () => {
           </Row>
         </div>
 
-        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-          <TabPane 
-            tab={
-              <span>
-                <UserOutlined />
-                基本信息
-              </span>
-            } 
-            key="profile"
-          >
-            <Form
-              form={profileForm}
-              layout="vertical"
-              initialValues={{
-                email: user.email,
-                // 预留更多字段
-                // name: user.name,
-                // bio: user.bio,
-                // location: user.location,
-                // website: user.website
-              }}
-              onFinish={handleProfileUpdate}
-              className="max-w-2xl"
-            >
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    label="邮箱"
-                    name="email"
-                  >
-                    <Input 
-                      prefix={<MailOutlined />} 
-                      disabled 
-                      size="large"
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              {/* 预留更多字段的UI，后端支持后可以启用 */}
-              {/* 
-              <Row gutter={24}>
-                <Col span={12}>
-                  <Form.Item
-                    label="显示名称"
-                    name="name"
-                  >
-                    <Input size="large" placeholder="您的显示名称" />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    label="位置"
-                    name="location"
-                  >
-                    <Input size="large" placeholder="例如：北京" />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Form.Item
-                label="个人简介"
-                name="bio"
-              >
-                <Input.TextArea 
-                  rows={4} 
-                  placeholder="介绍一下您自己"
-                  maxLength={200}
-                  showCount
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="个人网站"
-                name="website"
-              >
-                <Input 
-                  size="large" 
-                  placeholder="https://example.com"
-                  prefix={<LinkOutlined />}
-                />
-              </Form.Item>
-              */}
-
-              <Form.Item>
-                <Button 
-                  type="primary" 
-                  htmlType="submit" 
-                  loading={loading}
-                  size="large"
-                  disabled
-                >
-                  保存修改
-                </Button>
-                <Text type="secondary" className="ml-4">
-                  更多个人资料选项即将推出
-                </Text>
-              </Form.Item>
-            </Form>
-          </TabPane>
-
-          <TabPane 
-            tab={
-              <span>
-                <SafetyOutlined />
-                安全设置
-              </span>
-            } 
-            key="security"
-          >
-            <div className="max-w-2xl">
-              <Title level={4} className="mb-4">
-                <LockOutlined className="mr-2" />
-                修改密码
-              </Title>
-              
-              {user.has_password ? (
-                <Form
-                  form={passwordForm}
-                  layout="vertical"
-                  onFinish={handlePasswordChange}
-                >
-                  <Form.Item
-                    label="当前密码"
-                    name="current_password"
-                    rules={[{ required: true, message: '请输入当前密码' }]}
-                  >
-                    <Input.Password size="large" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="新密码"
-                    name="new_password"
-                    rules={[
-                      { required: true, message: '请输入新密码' },
-                      { min: 8, message: '密码至少8个字符' }
-                    ]}
-                  >
-                    <Input.Password size="large" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="确认新密码"
-                    name="confirm_password"
-                    rules={[
-                      { required: true, message: '请确认新密码' },
-                      ({ getFieldValue }) => ({
-                        validator(_, value) {
-                          if (!value || getFieldValue('new_password') === value) {
-                            return Promise.resolve()
-                          }
-                          return Promise.reject(new Error('两次输入的密码不一致'))
-                        },
-                      }),
-                    ]}
-                  >
-                    <Input.Password size="large" />
-                  </Form.Item>
-
-                  <Form.Item>
-                    <Button 
-                      type="primary" 
-                      htmlType="submit" 
-                      loading={passwordLoading}
-                      size="large"
-                    >
-                      修改密码
-                    </Button>
-                  </Form.Item>
-                </Form>
-              ) : (
-                <Card className="bg-gray-50">
-                  <Paragraph>
-                    您当前使用第三方账号登录，暂未设置密码。
-                    设置密码后，您可以使用邮箱和密码登录。
-                  </Paragraph>
-                  <Button type="primary" size="large">
-                    设置密码
-                  </Button>
-                </Card>
-              )}
-
-              <Divider />
-
-              <Title level={4} className="mb-4">
-                <SafetyOutlined className="mr-2" />
-                两步验证
-              </Title>
-              <Card className="bg-gray-50">
-                <Paragraph>
-                  启用两步验证可以大幅提高账号安全性。即使密码泄露，
-                  攻击者也无法登录您的账号。
-                </Paragraph>
-                <Button type="default" size="large" disabled>
-                  即将推出
-                </Button>
-              </Card>
-            </div>
-          </TabPane>
-
-          <TabPane 
-            tab={
-              <span>
-                <SettingOutlined />
-                偏好设置
-              </span>
-            } 
-            key="preferences"
-          >
-            <div className="max-w-2xl">
-              <Title level={4} className="mb-4">偏好设置</Title>
-              <Card className="bg-gray-50">
-                <Paragraph>
-                  更多个性化设置选项即将推出，包括：
-                </Paragraph>
-                <ul className="list-disc list-inside text-gray-600">
-                  <li>界面主题（亮色/暗色）</li>
-                  <li>语言偏好</li>
-                  <li>编辑器设置</li>
-                  <li>通知偏好</li>
-                  <li>隐私设置</li>
-                </ul>
-              </Card>
-            </div>
-          </TabPane>
-        </Tabs>
+        <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems} />
       </Card>
     </div>
   )

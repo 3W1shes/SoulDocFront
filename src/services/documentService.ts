@@ -10,10 +10,15 @@ import type {
   VersionComparison,
   DocumentVersion
 } from '@/types'
+import type { AxiosRequestConfig } from 'axios'
 
 export const documentService = {
   // 获取文档列表
-  getDocuments: (spaceSlug: string, query?: DocumentQuery): Promise<ApiResponse<DocumentListResponse>> => {
+  getDocuments: (
+    spaceSlug: string,
+    query?: DocumentQuery,
+    config?: AxiosRequestConfig & { silent?: boolean }
+  ): Promise<ApiResponse<DocumentListResponse>> => {
     const params = new URLSearchParams()
     if (query?.page) params.append('page', query.page.toString())
     if (query?.limit) params.append('limit', query.limit.toString())
@@ -22,7 +27,7 @@ export const documentService = {
     if (query?.is_public !== undefined) params.append('is_public', query.is_public.toString())
     
     const queryString = params.toString()
-    return request.get(`/docs/documents/${spaceSlug}${queryString ? `?${queryString}` : ''}`)
+    return request.get(`/docs/documents/${spaceSlug}${queryString ? `?${queryString}` : ''}`, config)
   },
 
   // 获取文档详情

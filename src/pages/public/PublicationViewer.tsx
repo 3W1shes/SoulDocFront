@@ -237,7 +237,10 @@ const PublicationViewer: React.FC = () => {
   if (loading && !currentDocument) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -324,15 +327,22 @@ const PublicationViewer: React.FC = () => {
           {currentDocument ? (
             <div className="max-w-4xl mx-auto p-6 md:p-8">
               {/* 面包屑导航 */}
-              <Breadcrumb className="mb-6">
-                <Breadcrumb.Item>
-                  <HomeOutlined />
-                  <span className="cursor-pointer" onClick={() => navigate(`/p/${slug}`)}>
-                    {publication?.title || '文档'}
-                  </span>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>{currentDocument.title}</Breadcrumb.Item>
-              </Breadcrumb>
+              <Breadcrumb
+                className="mb-6"
+                items={[
+                  {
+                    title: (
+                      <span className="cursor-pointer" onClick={() => navigate(`/p/${slug}`)}>
+                        <HomeOutlined />
+                        <span className="ml-1">{publication?.title || '文档'}</span>
+                      </span>
+                    ),
+                  },
+                  {
+                    title: currentDocument.title,
+                  },
+                ]}
+              />
 
               {/* 文档标题 */}
               <Title level={1} className="mb-4">

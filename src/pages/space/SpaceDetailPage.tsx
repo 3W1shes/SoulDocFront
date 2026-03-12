@@ -8,13 +8,12 @@ import {
   Breadcrumb,
   Spin,
   Empty,
-  message,
   Dropdown,
   Card,
   Space,
   Statistic,
   Tag,
-  Modal
+  App
 } from 'antd'
 import {
   FileTextOutlined,
@@ -44,6 +43,7 @@ type SpaceParams = {
 }
 
 const SpaceDetailPage: React.FC = () => {
+  const { message, modal } = App.useApp()
   const { spaceSlug } = useParams() as SpaceParams
   const navigate = useNavigate()
   const { currentSpace, loadSpace, loading: spaceLoading } = useSpaceStore()
@@ -152,12 +152,15 @@ const SpaceDetailPage: React.FC = () => {
   }
 
   const handleDeleteDocument = (docId: string) => {
-    Modal.confirm({
+    modal.confirm({
       title: '确认删除',
       content: '确定要删除这个文档吗？此操作不可恢复。',
       onOk: async () => {
         try {
-          await deleteDocumentById(docId) // 使用ID删除文档
+          await deleteDocumentById(docId, spaceSlug) // 使用ID删除文档并刷新树
+          if (spaceSlug) {
+            await loadSpaceStats(spaceSlug)
+          }
           message.success('文档删除成功')
         } catch (error) {
           message.error('删除文档失败')
@@ -193,7 +196,7 @@ const SpaceDetailPage: React.FC = () => {
       return
     }
 
-    Modal.confirm({
+    modal.confirm({
       title: '批量发布文档集',
       content: (
         <div>
@@ -236,7 +239,10 @@ const SpaceDetailPage: React.FC = () => {
   if (spaceLoading || docLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -331,21 +337,27 @@ const SpaceDetailPage: React.FC = () => {
       <Content className="bg-gray-50">
         <div className="p-6">
           {/* 面包屑导航 */}
-          <Breadcrumb className="mb-6">
-            <Breadcrumb.Item>
-              <HomeOutlined />
-              <span 
-                className="cursor-pointer ml-1"
-                onClick={() => navigate('/dashboard')}
-              >
-                首页
-              </span>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <FolderOpenOutlined />
-              <span className="ml-1">{currentSpace.name}</span>
-            </Breadcrumb.Item>
-          </Breadcrumb>
+          <Breadcrumb
+            className="mb-6"
+            items={[
+              {
+                title: (
+                  <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                    <HomeOutlined />
+                    <span className="ml-1">首页</span>
+                  </span>
+                ),
+              },
+              {
+                title: (
+                  <span>
+                    <FolderOpenOutlined />
+                    <span className="ml-1">{currentSpace.name}</span>
+                  </span>
+                ),
+              },
+            ]}
+          />
 
           {/* 空间信息 */}
           <Card className="mb-6">

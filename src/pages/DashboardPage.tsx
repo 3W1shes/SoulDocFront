@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { 
   Card, 
   Row, 
@@ -27,7 +27,6 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { spaceService } from '@/services/spaceService'
-import { documentService } from '@/services/documentService'
 import { statsService } from '@/services/statsService'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -64,8 +63,11 @@ const DashboardPage: React.FC = () => {
     totalViews: 0,
     totalMembers: 0,
   })
+  const hasLoadedRef = useRef(false)
 
   useEffect(() => {
+    if (hasLoadedRef.current) return
+    hasLoadedRef.current = true
     loadDashboardData()
   }, [])
 
@@ -81,52 +83,17 @@ const DashboardPage: React.FC = () => {
 
       // 处理空间数据
       if (spacesResponse?.success && spacesResponse.data?.spaces) {
-        const spaces = spacesResponse.data.spaces
+        const spaces = (spacesResponse.data.spaces || []) as SpaceWithStats[]
+
+        // 仅使用当前用户拥有的空间，避免对无权/脏数据空间发起 403/404 请求
+        const accessibleSpaces = spaces
+          .filter((space) => space.owner_id === user?.id)
+          .slice(0, 3)
+        setRecentSpaces(accessibleSpaces)
         
-        // 获取每个空间的统计信息和最近文档
-        const spacesWithStats = await Promise.all(
-          spaces.slice(0, 3).map(async (space: any) => {
-            try {
-              const statsRes = await spaceService.getSpaceStats(space.slug)
-              return {
-                ...space,
-                stats: statsRes?.data
-              } as SpaceWithStats
-            } catch (error) {
-              console.error(`Failed to load stats for space ${space.slug}:`, error)
-              return space as SpaceWithStats
-            }
-          })
-        )
-        
-        setRecentSpaces(spacesWithStats)
-        
-        // 获取最近文档
-        const allDocuments: Document[] = []
-        for (const space of spaces.slice(0, 3)) {
-          try {
-            const docsRes = await documentService.getDocuments(space.slug, { 
-              limit: 5
-            })
-            if (docsRes?.success && docsRes.data?.documents) {
-              const docsWithSpace = docsRes.data.documents.map((doc: any) => ({
-                ...doc,
-                space_name: space.name,
-                space_slug: space.slug
-              }))
-              allDocuments.push(...docsWithSpace)
-            }
-          } catch (error) {
-            console.error(`Failed to load documents for space ${space.slug}:`, error)
-          }
-        }
-        
-        // 按更新时间排序并取前5个
-        const sortedDocs = allDocuments
-          .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
-          .slice(0, 5)
-        
-        setRecentDocuments(sortedDocs)
+        // 临时降噪：空间权限/脏数据未完全清理前，首页不做按空间逐个拉文档，
+        // 避免产生大量 403/404 控制台噪音。
+        setRecentDocuments([])
       }
 
       // 处理统计数据
@@ -160,7 +127,10 @@ const DashboardPage: React.FC = () => {
   if (loading) {
     return (
       <div className="p-6 flex justify-center items-center min-h-96">
-        <Spin size="large" tip="正在加载仪表板..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">正在加载仪表板...</div>
+        </div>
       </div>
     )
   }

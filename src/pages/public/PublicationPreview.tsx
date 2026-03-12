@@ -183,7 +183,10 @@ const PublicationPreview: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -302,7 +305,10 @@ const PublicationPreview: React.FC = () => {
           <div className="max-w-4xl mx-auto px-4 py-8">
             {docLoading ? (
               <div className="flex justify-center py-12">
-                <Spin size="large" tip="加载文档中..." />
+                <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载文档中...</div>
+        </div>
               </div>
             ) : currentDoc ? (
               <article>

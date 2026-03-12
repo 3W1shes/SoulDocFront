@@ -13,6 +13,7 @@ import RegisterPage from '@/pages/auth/RegisterPage'
 import EmailVerificationPage from '@/pages/auth/EmailVerificationPage'
 import OAuthCallbackPage from '@/pages/auth/OAuthCallbackPage'
 import InitializePasswordPage from '@/pages/auth/InitializePasswordPage'
+import SsoBridgePage from '@/pages/auth/SsoBridgePage'
 import DashboardPage from '@/pages/DashboardPage'
 import SpaceDetailPage from '@/pages/space/SpaceDetailPage'
 import SpaceListPage from '@/pages/space/SpaceListPage'
@@ -31,8 +32,6 @@ import ProfilePage from '@/pages/profile/ProfilePage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import NotificationsPage from '@/pages/notifications'
 
-// 安装向导
-import InstallerApp from './InstallerApp'
 
 // 公开文档查看器
 import PublicationHome from '@/pages/public/PublicationHome'
@@ -63,32 +62,15 @@ const App: React.FC = () => {
   const { refreshUser } = useAuthStore()
   const location = useLocation()
   const [loading, setLoading] = React.useState(true)
-  const [needsInstallation, setNeedsInstallation] = React.useState(false)
-  
-
   useEffect(() => {
     const initApp = async () => {
       try {
-        // 首先检查是否需要安装
-        const response = await fetch('/api/install/status')
-        if (response.ok) {
-          const data = await response.json()
-          if (data.status === 'success' && data.data && !data.data.is_installed) {
-            setNeedsInstallation(true)
-            setLoading(false)
-            return
-          }
-        }
-
-        // 如果不需要安装，继续正常的认证初始化
-        const token = localStorage.getItem('auth_token')
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('jwt_token')
         if (token) {
           await refreshUser()
         }
       } catch (error) {
         console.error('初始化失败:', error)
-        // 如果检查安装状态失败，假设需要安装
-        setNeedsInstallation(true)
       } finally {
         setLoading(false)
       }
@@ -100,14 +82,12 @@ const App: React.FC = () => {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <Spin size="large" tip="正在加载..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">正在加载...</div>
+        </div>
       </div>
     )
-  }
-
-  // 如果需要安装，显示安装向导
-  if (needsInstallation) {
-    return <InstallerApp />
   }
 
   return (
@@ -165,6 +145,11 @@ const App: React.FC = () => {
           path="/oauth/callback"
           element={<OAuthCallbackPage />}
         />
+
+        <Route
+          path="/sso"
+          element={<SsoBridgePage />}
+        />
         
         <Route
           path="/initialize-password"
@@ -187,6 +172,7 @@ const App: React.FC = () => {
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/spaces" element={<SpaceListPage />} />
+                  <Route path="/spaces/create" element={<SpaceListPage />} />
                   <Route path="/spaces/:spaceSlug" element={<SpaceDetailPage />} />
                   <Route path="/spaces/:spaceSlug/members" element={<SpaceMembersPage />} />
                   <Route path="/spaces/:spaceSlug/settings" element={<SpaceSettingsPage />} />

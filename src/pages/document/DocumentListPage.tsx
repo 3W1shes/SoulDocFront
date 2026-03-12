@@ -178,40 +178,44 @@ const DocumentListPage: React.FC = () => {
     <Layout className="min-h-screen bg-white">
       <Content className="p-6">
         {/* 面包屑导航 */}
-        <Breadcrumb className="mb-6">
-          <Breadcrumb.Item>
-            <HomeOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/dashboard')}
-            >
-              首页
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <FolderOpenOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/spaces')}
-            >
-              空间管理
-            </span>
-          </Breadcrumb.Item>
-          {currentSpace && (
-            <Breadcrumb.Item>
-              <span 
-                className="cursor-pointer"
-                onClick={() => navigate(`/spaces/${spaceSlug}`)}
-              >
-                {currentSpace.name}
-              </span>
-            </Breadcrumb.Item>
-          )}
-          <Breadcrumb.Item>
-            <FileTextOutlined />
-            <span className="ml-1">文档管理</span>
-          </Breadcrumb.Item>
-        </Breadcrumb>
+        <Breadcrumb
+          className="mb-6"
+          items={[
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                  <HomeOutlined />
+                  <span className="ml-1">首页</span>
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/spaces')}>
+                  <FolderOpenOutlined />
+                  <span className="ml-1">空间管理</span>
+                </span>
+              ),
+            },
+            ...(currentSpace
+              ? [{
+                  title: (
+                    <span className="cursor-pointer" onClick={() => navigate(`/spaces/${spaceSlug}`)}>
+                      {currentSpace.name}
+                    </span>
+                  ),
+                }]
+              : []),
+            {
+              title: (
+                <span>
+                  <FileTextOutlined />
+                  <span className="ml-1">文档管理</span>
+                </span>
+              ),
+            },
+          ]}
+        />
 
         {/* 页面头部 */}
         <div className="flex items-center justify-between mb-6">

@@ -35,7 +35,7 @@ interface DocumentState {
   updateDocument: (spaceSlug: string, docSlug: string, data: UpdateDocumentRequest) => Promise<void>
   updateDocumentById: (docId: string, data: UpdateDocumentRequest) => Promise<void>
   deleteDocument: (spaceSlug: string, docSlug: string) => Promise<void>
-  deleteDocumentById: (docId: string) => Promise<void>
+  deleteDocumentById: (docId: string, spaceSlug?: string) => Promise<void>
   
   // 编辑相关
   startEditing: () => void
@@ -135,7 +135,7 @@ export const useDocStore = create<DocumentState>((set, get) => ({
       const response = await documentService.createDocument(spaceSlug, data)
       
       // 重新加载文档树
-      get().loadDocumentTree(spaceSlug)
+      await get().loadDocumentTree(spaceSlug)
       
       set({ saving: false })
       return response?.data
@@ -208,7 +208,7 @@ export const useDocStore = create<DocumentState>((set, get) => ({
       await documentService.deleteDocument(spaceSlug, docSlug)
       
       // 重新加载文档树
-      get().loadDocumentTree(spaceSlug)
+      await get().loadDocumentTree(spaceSlug)
       
       // 如果删除的是当前文档，清空当前文档
       const { currentDocument } = get()
@@ -226,10 +226,15 @@ export const useDocStore = create<DocumentState>((set, get) => ({
     }
   },
 
-  deleteDocumentById: async (docId: string) => {
+  deleteDocumentById: async (docId: string, spaceSlug?: string) => {
     set({ loading: true, error: null })
     try {
       await documentService.deleteDocumentById(docId)
+
+      // 删除后立即刷新当前空间文档树，确保前端显示最新列表
+      if (spaceSlug) {
+        await get().loadDocumentTree(spaceSlug)
+      }
       
       // 如果删除的是当前文档，清空当前文档
       const { currentDocument } = get()

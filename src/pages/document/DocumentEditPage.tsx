@@ -195,7 +195,10 @@ const DocumentEditPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -224,32 +227,36 @@ const DocumentEditPage: React.FC = () => {
                     返回
                   </Button>
                   
-                  <Breadcrumb>
-                    <Breadcrumb.Item>
-                      <HomeOutlined />
-                      <span 
-                        className="cursor-pointer ml-1"
-                        onClick={() => navigate('/dashboard')}
-                      >
-                        首页
-                      </span>
-                    </Breadcrumb.Item>
-                    {currentSpace && (
-                      <Breadcrumb.Item>
-                        <FolderOpenOutlined />
-                        <span 
-                          className="cursor-pointer ml-1"
-                          onClick={() => navigate(`/spaces/${currentSpace.slug}`)}
-                        >
-                          {currentSpace.name}
-                        </span>
-                      </Breadcrumb.Item>
-                    )}
-                    <Breadcrumb.Item>
-                      <FileTextOutlined />
-                      <span className="ml-1">编辑: {currentDocument.title}</span>
-                    </Breadcrumb.Item>
-                  </Breadcrumb>
+                  <Breadcrumb
+                    items={[
+                      {
+                        title: (
+                          <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                            <HomeOutlined />
+                            <span className="ml-1">首页</span>
+                          </span>
+                        ),
+                      },
+                      ...(currentSpace
+                        ? [{
+                            title: (
+                              <span className="cursor-pointer" onClick={() => navigate(`/spaces/${currentSpace.slug}`)}>
+                                <FolderOpenOutlined />
+                                <span className="ml-1">{currentSpace.name}</span>
+                              </span>
+                            ),
+                          }]
+                        : []),
+                      {
+                        title: (
+                          <span>
+                            <FileTextOutlined />
+                            <span className="ml-1">编辑: {currentDocument.title}</span>
+                          </span>
+                        ),
+                      },
+                    ]}
+                  />
                 </div>
 
                 <div className="flex items-center space-x-2">

@@ -4,6 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/docs/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,9 +14,10 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    allowedHosts: ['forum.local'],
     proxy: {
       '/api': {
-        target: 'http://129.226.169.63:8000',  // Kong网关地址
+        target: 'http://127.0.0.1',  // local Nginx
         changeOrigin: true,
         secure: false,
         configure: (proxy, _options) => {

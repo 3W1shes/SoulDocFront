@@ -13,7 +13,7 @@ import {
   Dropdown,
   Affix,
   Anchor,
-  BackTop,
+  FloatButton,
   message,
   Drawer,
   Tree
@@ -53,10 +53,7 @@ interface DocumentParams extends RouteParams {
 }
 
 const DocumentByIdViewPage: React.FC = () => {
-  console.log('=== DocumentByIdViewPage component loaded ===')
-  
   const { docId } = useParams<DocumentParams>()
-  console.log('DocId from params:', docId)
   const navigate = useNavigate()
   const { currentDocument, loadDocumentById, loading, documentTree } = useDocStore()
   const { currentSpace, loadSpace } = useSpaceStore()
@@ -190,7 +187,10 @@ const DocumentByIdViewPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -260,34 +260,37 @@ const DocumentByIdViewPage: React.FC = () => {
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100 px-4 sm:px-8 py-4 sm:py-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               {/* 面包屑导航 */}
-              <Breadcrumb className="text-gray-600 flex-1 min-w-0">
-                <Breadcrumb.Item>
-                  <HomeOutlined className="text-blue-500" />
-                  <span 
-                    className="cursor-pointer ml-2 hover:text-blue-600 transition-colors"
-                    onClick={() => navigate('/dashboard')}
-                  >
-                    首页
-                  </span>
-                </Breadcrumb.Item>
-                {spaceInfo && (
-                  <Breadcrumb.Item>
-                    <FolderOpenOutlined className="text-green-500" />
-                    <span 
-                      className="cursor-pointer ml-2 hover:text-green-600 transition-colors"
-                      onClick={() => navigate(`/spaces/${spaceInfo.slug}`)}
-                    >
-                      {spaceInfo.name}
-                    </span>
-                  </Breadcrumb.Item>
-                )}
-                <Breadcrumb.Item>
-                  <FileTextOutlined className="text-purple-500" />
-                  <span className="ml-2 font-medium text-gray-800 truncate">
-                    {currentDocument.title}
-                  </span>
-                </Breadcrumb.Item>
-              </Breadcrumb>
+              <Breadcrumb
+                className="text-gray-600 flex-1 min-w-0"
+                items={[
+                  {
+                    title: (
+                      <span className="cursor-pointer hover:text-blue-600 transition-colors" onClick={() => navigate('/dashboard')}>
+                        <HomeOutlined className="text-blue-500" />
+                        <span className="ml-2">首页</span>
+                      </span>
+                    ),
+                  },
+                  ...(spaceInfo
+                    ? [{
+                        title: (
+                          <span className="cursor-pointer hover:text-green-600 transition-colors" onClick={() => navigate(`/spaces/${spaceInfo.slug}`)}>
+                            <FolderOpenOutlined className="text-green-500" />
+                            <span className="ml-2">{spaceInfo.name}</span>
+                          </span>
+                        ),
+                      }]
+                    : []),
+                  {
+                    title: (
+                      <span>
+                        <FileTextOutlined className="text-purple-500" />
+                        <span className="ml-2 font-medium text-gray-800 truncate">{currentDocument.title}</span>
+                      </span>
+                    ),
+                  },
+                ]}
+              />
 
               {/* 操作按钮 */}
               <div className="flex items-center gap-2 flex-shrink-0">
@@ -653,7 +656,7 @@ const DocumentByIdViewPage: React.FC = () => {
       </Content>
 
       {/* 回到顶部按钮 */}
-      <BackTop 
+      <FloatButton.BackTop
         style={{
           right: 24,
           bottom: 24,

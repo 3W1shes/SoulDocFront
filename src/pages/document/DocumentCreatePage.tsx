@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import {
+  App,
   Layout,
   Typography,
   Button,
@@ -43,6 +44,7 @@ interface CreateDocumentQuery {
 }
 
 const DocumentCreatePage: React.FC = () => {
+  const { message } = App.useApp()
   const { spaceSlug } = useParams<DocumentCreateParams>()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -170,46 +172,54 @@ function hello() {
     <Layout className="min-h-screen bg-white">
       <Content className="p-6">
         {/* 面包屑导航 */}
-        <Breadcrumb className="mb-6">
-          <Breadcrumb.Item>
-            <HomeOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/dashboard')}
-            >
-              首页
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <FolderOpenOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/spaces')}
-            >
-              空间管理
-            </span>
-          </Breadcrumb.Item>
-          {currentSpace && (
-            <Breadcrumb.Item>
-              <span 
-                className="cursor-pointer"
-                onClick={() => navigate(`/spaces/${spaceSlug}`)}
-              >
-                {currentSpace.name}
-              </span>
-            </Breadcrumb.Item>
-          )}
-          {parentTitle && (
-            <Breadcrumb.Item>
-              <FileTextOutlined />
-              <span className="ml-1">{parentTitle}</span>
-            </Breadcrumb.Item>
-          )}
-          <Breadcrumb.Item>
-            <FileTextOutlined />
-            <span className="ml-1">{parentTitle ? '创建子文档' : '创建文档'}</span>
-          </Breadcrumb.Item>
-        </Breadcrumb>
+        <Breadcrumb
+          className="mb-6"
+          items={[
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                  <HomeOutlined />
+                  <span className="ml-1">首页</span>
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/spaces')}>
+                  <FolderOpenOutlined />
+                  <span className="ml-1">空间管理</span>
+                </span>
+              ),
+            },
+            ...(currentSpace
+              ? [{
+                  title: (
+                    <span className="cursor-pointer" onClick={() => navigate(`/spaces/${spaceSlug}`)}>
+                      {currentSpace.name}
+                    </span>
+                  ),
+                }]
+              : []),
+            ...(parentTitle
+              ? [{
+                  title: (
+                    <span>
+                      <FileTextOutlined />
+                      <span className="ml-1">{parentTitle}</span>
+                    </span>
+                  ),
+                }]
+              : []),
+            {
+              title: (
+                <span>
+                  <FileTextOutlined />
+                  <span className="ml-1">{parentTitle ? '创建子文档' : '创建文档'}</span>
+                </span>
+              ),
+            },
+          ]}
+        />
 
         {/* 顶部操作栏 */}
         <div className="flex items-center justify-between mb-6">

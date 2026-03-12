@@ -5,6 +5,7 @@ import type {
   ApiResponse,
   SpaceListResponse
 } from '@/types'
+import type { AxiosRequestConfig } from 'axios'
 
 export interface SpaceQuery {
   page?: number
@@ -54,8 +55,8 @@ export const spaceService = {
     request.delete(`/docs/spaces/${slug}`),
 
   // 获取空间统计
-  getSpaceStats: (slug: string): Promise<ApiResponse<SpaceStats>> =>
-    request.get(`/docs/spaces/${slug}/stats`),
+  getSpaceStats: (slug: string, config?: AxiosRequestConfig & { silent?: boolean }): Promise<ApiResponse<SpaceStats>> =>
+    request.get(`/docs/spaces/${slug}/stats`, config),
 
   // 检查空间slug是否可用
   checkSlugAvailability: (slug: string): Promise<ApiResponse<{ available: boolean }>> =>

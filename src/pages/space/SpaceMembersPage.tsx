@@ -38,7 +38,10 @@ const SpaceMembersPage: React.FC = () => {
   if (spaceLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -63,38 +66,42 @@ const SpaceMembersPage: React.FC = () => {
     <Layout className="min-h-screen bg-white">
       <Content className="p-6">
         {/* 面包屑导航 */}
-        <Breadcrumb className="mb-6">
-          <Breadcrumb.Item>
-            <HomeOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/dashboard')}
-            >
-              首页
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <FolderOpenOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/spaces')}
-            >
-              空间管理
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <span 
-              className="cursor-pointer"
-              onClick={() => navigate(`/spaces/${spaceSlug}`)}
-            >
-              {currentSpace.name}
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <TeamOutlined />
-            <span className="ml-1">成员管理</span>
-          </Breadcrumb.Item>
-        </Breadcrumb>
+        <Breadcrumb
+          className="mb-6"
+          items={[
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                  <HomeOutlined />
+                  <span className="ml-1">首页</span>
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/spaces')}>
+                  <FolderOpenOutlined />
+                  <span className="ml-1">空间管理</span>
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate(`/spaces/${spaceSlug}`)}>
+                  {currentSpace.name}
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span>
+                  <TeamOutlined />
+                  <span className="ml-1">成员管理</span>
+                </span>
+              ),
+            },
+          ]}
+        />
 
         {/* 页面标题 */}
         <div className="mb-6">

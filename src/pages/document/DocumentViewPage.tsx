@@ -13,7 +13,7 @@ import {
   Dropdown,
   Affix,
   Anchor,
-  BackTop,
+  FloatButton,
   message,
   Tree
 } from 'antd'
@@ -228,7 +228,10 @@ const DocumentViewPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -300,37 +303,36 @@ const DocumentViewPage: React.FC = () => {
         <Content className="bg-white">
         <div className="max-w-4xl mx-auto p-6">
           {/* 面包屑导航 */}
-          <Breadcrumb className="mb-6">
-            <Breadcrumb.Item>
-              <HomeOutlined />
-              <span 
-                className="cursor-pointer ml-1"
-                onClick={() => navigate('/dashboard')}
-              >
-                首页
-              </span>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <FolderOpenOutlined />
-              <span 
-                className="cursor-pointer ml-1"
-                onClick={() => navigate(`/spaces/${spaceSlug}`)}
-              >
-                {currentSpace?.name}
-              </span>
-            </Breadcrumb.Item>
-            {breadcrumbs.map((item, index) => (
-              <Breadcrumb.Item key={item.id}>
-                <FileTextOutlined />
-                <span 
-                  className="cursor-pointer ml-1"
-                  onClick={() => navigate(`/spaces/${spaceSlug}/docs/${item.slug}`)}
-                >
-                  {item.title}
-                </span>
-              </Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
+          <Breadcrumb
+            className="mb-6"
+            items={[
+              {
+                title: (
+                  <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                    <HomeOutlined />
+                    <span className="ml-1">首页</span>
+                  </span>
+                ),
+              },
+              {
+                title: (
+                  <span className="cursor-pointer" onClick={() => navigate(`/spaces/${spaceSlug}`)}>
+                    <FolderOpenOutlined />
+                    <span className="ml-1">{currentSpace?.name}</span>
+                  </span>
+                ),
+              },
+              ...breadcrumbs.map((item) => ({
+                key: item.id,
+                title: (
+                  <span className="cursor-pointer" onClick={() => navigate(`/spaces/${spaceSlug}/docs/${item.slug}`)}>
+                    <FileTextOutlined />
+                    <span className="ml-1">{item.title}</span>
+                  </span>
+                ),
+              })),
+            ]}
+          />
 
           {/* 文档头部 */}
           <Card className="mb-6">
@@ -428,7 +430,7 @@ const DocumentViewPage: React.FC = () => {
         </Content>
 
         {/* 回到顶部 */}
-        <BackTop />
+        <FloatButton.BackTop />
       </Layout>
     </Layout>
   )

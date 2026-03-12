@@ -17,7 +17,7 @@ export const authService = {
 
   // 获取当前用户信息
   getCurrentUser: (): Promise<ApiResponse<User>> =>
-    request.get('/auth/me'),
+    request.get('/docs/auth/me'),
 
   // 退出登录
   logout: (): Promise<ApiResponse<null>> =>
@@ -63,6 +63,14 @@ export const authService = {
     request.get(`/auth/verify-email/${token}`),
 
   // 发送邮箱验证码
-  sendEmailVerification: (): Promise<ApiResponse<null>> =>
-    request.post('/auth/send-verification'),
+  sendEmailVerification: async (): Promise<ApiResponse<null>> => {
+    // NOTE: 当前后端未提供发送验证邮件接口，避免触发 404 噪音。
+    // 等后端落地后改为真实请求。
+    return Promise.reject({
+      response: {
+        status: 501,
+        data: { message: '当前环境未启用发送验证邮件接口' },
+      },
+    })
+  },
 }

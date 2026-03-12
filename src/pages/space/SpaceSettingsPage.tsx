@@ -26,7 +26,6 @@ import type { Publication } from '@/services/publicationService'
 
 const { Content } = Layout
 const { Title } = Typography
-const { TabPane } = Tabs
 
 type SpaceParams = {
   spaceSlug: string
@@ -55,7 +54,10 @@ const SpaceSettingsPage: React.FC = () => {
   if (spaceLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Spin size="large" tip="加载中..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
       </div>
     )
   }
@@ -80,38 +82,42 @@ const SpaceSettingsPage: React.FC = () => {
     <Layout className="min-h-screen bg-gray-50">
       <Content className="p-6">
         {/* 面包屑导航 */}
-        <Breadcrumb className="mb-6">
-          <Breadcrumb.Item>
-            <HomeOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/dashboard')}
-            >
-              首页
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <FolderOpenOutlined />
-            <span 
-              className="cursor-pointer ml-1"
-              onClick={() => navigate('/spaces')}
-            >
-              空间管理
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <span 
-              className="cursor-pointer"
-              onClick={() => navigate(`/spaces/${spaceSlug}`)}
-            >
-              {currentSpace.name}
-            </span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <SettingOutlined />
-            <span className="ml-1">设置</span>
-          </Breadcrumb.Item>
-        </Breadcrumb>
+        <Breadcrumb
+          className="mb-6"
+          items={[
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                  <HomeOutlined />
+                  <span className="ml-1">首页</span>
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate('/spaces')}>
+                  <FolderOpenOutlined />
+                  <span className="ml-1">空间管理</span>
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span className="cursor-pointer" onClick={() => navigate(`/spaces/${spaceSlug}`)}>
+                  {currentSpace.name}
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span>
+                  <SettingOutlined />
+                  <span className="ml-1">设置</span>
+                </span>
+              ),
+            },
+          ]}
+        />
 
         {/* 页面标题 */}
         <div className="mb-6">
@@ -123,74 +129,79 @@ const SpaceSettingsPage: React.FC = () => {
 
         {/* 设置标签页 */}
         <Card>
-          <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <TabPane 
-              tab={
-                <span>
-                  <TeamOutlined />
-                  成员管理
-                </span>
-              } 
-              key="members"
-            >
-              <SpaceMemberManager 
-                spaceSlug={spaceSlug!}
-                spaceId={currentSpace.id} 
-                currentUserId={user.id}
-              />
-            </TabPane>
-
-            <TabPane 
-              tab={
-                <span>
-                  <GlobalOutlined />
-                  发布管理
-                </span>
-              } 
-              key="publications"
-            >
-              <PublicationList
-                spaceId={currentSpace.id}
-                spaceName={currentSpace.name}
-                onPublish={() => setPublishDialogVisible(true)}
-              />
-            </TabPane>
-
-            <TabPane 
-              tab={
-                <span>
-                  <InfoCircleOutlined />
-                  基本信息
-                </span>
-              } 
-              key="info"
-            >
-              <Card title="空间信息">
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-gray-500">空间名称：</span>
-                    <span className="font-medium">{currentSpace.name}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">空间标识：</span>
-                    <code className="bg-gray-100 px-2 py-1 rounded">{currentSpace.slug}</code>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">描述：</span>
-                    <span>{currentSpace.description || '暂无描述'}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">访问权限：</span>
-                    <span>{currentSpace.is_public ? '公开' : '私有'}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">创建时间：</span>
-                    <span>{new Date(currentSpace.created_at).toLocaleString()}</span>
-                  </div>
-                </div>
-              </Card>
-            </TabPane>
-          </Tabs>
+          <Tabs
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            items={[
+              {
+                key: 'members',
+                label: (
+                  <span>
+                    <TeamOutlined />
+                    成员管理
+                  </span>
+                ),
+                children: (
+                  <SpaceMemberManager 
+                    spaceSlug={spaceSlug!}
+                    spaceId={currentSpace.id} 
+                    currentUserId={user.id}
+                  />
+                ),
+              },
+              {
+                key: 'publications',
+                label: (
+                  <span>
+                    <GlobalOutlined />
+                    发布管理
+                  </span>
+                ),
+                children: (
+                  <PublicationList
+                    spaceId={currentSpace.id}
+                    spaceName={currentSpace.name}
+                    onPublish={() => setPublishDialogVisible(true)}
+                  />
+                ),
+              },
+              {
+                key: 'info',
+                label: (
+                  <span>
+                    <InfoCircleOutlined />
+                    基本信息
+                  </span>
+                ),
+                children: (
+                  <Card title="空间信息">
+                    <div className="space-y-4">
+                      <div>
+                        <span className="text-gray-500">空间名称：</span>
+                        <span className="font-medium">{currentSpace.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">空间标识：</span>
+                        <code className="bg-gray-100 px-2 py-1 rounded">{currentSpace.slug}</code>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">描述：</span>
+                        <span>{currentSpace.description || '暂无描述'}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">访问权限：</span>
+                        <span>{currentSpace.is_public ? '公开' : '私有'}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">创建时间：</span>
+                        <span>{new Date(currentSpace.created_at).toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </Card>
+                ),
+              },
+            ]}
+          />
         </Card>
 
         {/* 发布对话框 */}

@@ -117,7 +117,10 @@ const AcceptInvitationPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Spin size="large" tip="加载邀请信息..." />
+        <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载邀请信息...</div>
+        </div>
       </div>
     )
   }

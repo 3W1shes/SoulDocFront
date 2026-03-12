@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Card,
   List,
@@ -45,6 +45,7 @@ const { Search } = Input
 
 const SpaceListPage: React.FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { spaces, loading, loadSpaces, createSpace, deleteSpace } = useSpaceStore()
   const [searchTerm, setSearchTerm] = useState('')
   const [createModalVisible, setCreateModalVisible] = useState(false)
@@ -55,14 +56,30 @@ const SpaceListPage: React.FC = () => {
     loadSpaces()
   }, [])
 
+  useEffect(() => {
+    if (location.pathname === '/spaces/create') {
+      setCreateModalVisible(true)
+    }
+  }, [location.pathname])
+
   const handleCreateSpace = async (values: CreateSpaceRequest) => {
     try {
       await createSpace(values)
       message.success('空间创建成功')
       setCreateModalVisible(false)
       createForm.resetFields()
+      if (location.pathname === '/spaces/create') {
+        navigate('/spaces', { replace: true })
+      }
     } catch (error) {
       message.error('创建空间失败')
+    }
+  }
+
+  const handleCancelCreate = () => {
+    setCreateModalVisible(false)
+    if (location.pathname === '/spaces/create') {
+      navigate('/spaces', { replace: true })
     }
   }
 
@@ -182,21 +199,27 @@ const SpaceListPage: React.FC = () => {
   return (
     <div className="p-6">
       {/* 面包屑导航 */}
-      <Breadcrumb className="mb-6">
-        <Breadcrumb.Item>
-          <HomeOutlined />
-          <span 
-            className="cursor-pointer ml-1"
-            onClick={() => navigate('/dashboard')}
-          >
-            首页
-          </span>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <FolderOpenOutlined />
-          <span className="ml-1">空间管理</span>
-        </Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+        className="mb-6"
+        items={[
+          {
+            title: (
+              <span className="cursor-pointer" onClick={() => navigate('/dashboard')}>
+                <HomeOutlined />
+                <span className="ml-1">首页</span>
+              </span>
+            ),
+          },
+          {
+            title: (
+              <span>
+                <FolderOpenOutlined />
+                <span className="ml-1">空间管理</span>
+              </span>
+            ),
+          },
+        ]}
+      />
 
       {/* 页面标题和操作 */}
       <div className="flex items-center justify-between mb-6">
@@ -237,7 +260,10 @@ const SpaceListPage: React.FC = () => {
       <div>
         {loading ? (
           <div className="flex justify-center items-center h-96">
-            <Spin size="large" tip="加载中..." />
+            <div className="text-center">
+          <Spin size="large" />
+          <div className="mt-3 text-gray-500">加载中...</div>
+        </div>
           </div>
         ) : filteredSpaces.length === 0 ? (
           <Empty
@@ -271,7 +297,7 @@ const SpaceListPage: React.FC = () => {
       <Modal
         title="创建新空间"
         open={createModalVisible}
-        onCancel={() => setCreateModalVisible(false)}
+        onCancel={handleCancelCreate}
         footer={null}
       >
         <Form

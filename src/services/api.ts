@@ -1,5 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { message } from 'antd'
+
+type RequestConfig = AxiosRequestConfig & {
+  silent?: boolean
+}
 
 // 创建axios实例
 const api: AxiosInstance = axios.create({
@@ -14,7 +17,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config) => {
     // 添加认证token
-    const token = localStorage.getItem('auth_token')
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('jwt_token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -30,7 +33,6 @@ api.interceptors.response.use(
   (response: AxiosResponse) => {
     // 检查业务状态码
     if (response.data && !response.data.success && response.data.message) {
-      message.error(response.data.message)
       return Promise.reject(new Error(response.data.message))
     }
     
@@ -40,50 +42,29 @@ api.interceptors.response.use(
     // 处理HTTP错误
     if (error.response) {
       const { status, data } = error.response
+      const silent = Boolean((error.config as RequestConfig | undefined)?.silent)
       
+      if (silent) {
+        return Promise.reject(error)
+      }
+
       switch (status) {
-        case 401:
+        case 401: {
           // 未授权，清除token并跳转到登录页
           localStorage.removeItem('auth_token')
-          window.location.href = '/login'
-          message.error('登录已过期，请重新登录')
+          const base = import.meta.env.BASE_URL || '/'
+          window.location.href = `${base}login`
           break
-          
+        }
         case 403:
-          message.error('权限不足')
-          break
-          
         case 404:
-          message.error('请求的资源不存在')
-          break
-          
         case 422:
-          // 验证错误
-          if (data.errors) {
-            const errorMessages = Object.values(data.errors).flat()
-            message.error(errorMessages.join(', '))
-          } else {
-            message.error(data.message || '请求参数错误')
-          }
-          break
-          
         case 429:
-          message.error('请求过于频繁，请稍后再试')
-          break
-          
         case 500:
-          message.error('服务器内部错误')
-          break
-          
         default:
-          message.error(data?.message || data?.error || '网络错误，请稍后重试')
+          // 统一将错误交给调用方页面处理，避免在服务层触发 antd 静态 message 警告
+          break
       }
-    } else if (error.request) {
-      // 网络错误
-      message.error('网络连接失败，请检查网络设置')
-    } else {
-      // 其他错误
-      message.error(error.message || '未知错误')
     }
     
     return Promise.reject(error)
@@ -92,22 +73,22 @@ api.interceptors.response.use(
 
 // 通用请求方法
 export const request = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> =>
+  get: <T = any>(url: string, config?: RequestConfig): Promise<T> =>
     api.get(url, config).then(res => res.data),
     
-  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> =>
+  post: <T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> =>
     api.post(url, data, config).then(res => res.data),
     
-  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> =>
+  put: <T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> =>
     api.put(url, data, config).then(res => res.data),
     
-  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> =>
+  patch: <T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> =>
     api.patch(url, data, config).then(res => res.data),
     
-  delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> =>
+  delete: <T = any>(url: string, config?: RequestConfig): Promise<T> =>
     api.delete(url, config).then(res => res.data),
     
-  upload: <T = any>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> =>
+  upload: <T = any>(url: string, formData: FormData, config?: RequestConfig): Promise<T> =>
     api.post(url, formData, {
       ...config,
       headers: {
