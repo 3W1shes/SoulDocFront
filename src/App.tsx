@@ -37,12 +37,16 @@ import NotificationsPage from '@/pages/notifications'
 import PublicationHome from '@/pages/public/PublicationHome'
 import PublicationPreview from '@/pages/public/PublicationPreview'
 
+export const FORUM_LOGIN_URL = 'http://43.106.96.48/forum/login'
+export const FORUM_REGISTER_URL = 'http://43.106.96.48/forum/register'
+
 // 路由守卫组件
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore()
   
   if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />
+    window.location.replace(FORUM_LOGIN_URL)
+    return null
   }
   
   return <>{children}</>

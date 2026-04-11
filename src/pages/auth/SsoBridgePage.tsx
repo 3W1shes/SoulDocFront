@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Spin, Result, Button } from 'antd'
 import { useAuthStore } from '@/stores/authStore'
+import { FORUM_LOGIN_URL } from '@/App'
 
 const SsoBridgePage: React.FC = () => {
   const navigate = useNavigate()
@@ -73,7 +74,7 @@ const SsoBridgePage: React.FC = () => {
           title="单点登录失败"
           subTitle={error}
           extra={[
-            <Button key="login" type="primary" onClick={() => navigate('/login', { replace: true })}>
+            <Button key="login" type="primary" href={FORUM_LOGIN_URL}>
               返回登录
             </Button>,
           ]}

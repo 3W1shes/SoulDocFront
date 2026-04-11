@@ -6,6 +6,8 @@ import { authService } from '@/services/authService'
 import type { RegisterData } from '@/types'
 
 const { Title, Text } = Typography
+const FORUM_LOGIN_URL = 'http://43.106.96.48/forum/login'
+const FORUM_REGISTER_URL = 'http://43.106.96.48/forum/register'
 
 const RegisterPage: React.FC = () => {
   const [form] = Form.useForm()
@@ -29,7 +31,7 @@ const RegisterPage: React.FC = () => {
       
       // 3秒后跳转到登录页面
       setTimeout(() => {
-        navigate('/login')
+        window.location.href = FORUM_LOGIN_URL
       }, 3000)
       
     } catch (error: any) {
@@ -51,7 +53,7 @@ const RegisterPage: React.FC = () => {
               我们已经向您的邮箱发送了验证邮件，请点击邮件中的链接来激活您的账户。
             </Text>
             <Text className="text-gray-500 text-sm">
-              3秒后自动跳转到登录页面...
+              3秒后自动跳转到论坛登录页面...
             </Text>
           </div>
         </Card>
@@ -137,25 +139,25 @@ const RegisterPage: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
-              loading={loading}
+            <Button
+              type="primary"
+              htmlType="button"
+              href={FORUM_REGISTER_URL}
               className="w-full h-12 text-base font-medium"
             >
-              {loading ? '注册中...' : '注册'}
+              前往论坛注册
             </Button>
           </Form.Item>
         </Form>
 
         <div className="text-center mt-6">
           <Text className="text-gray-600">已有账户？ </Text>
-          <Link 
-            to="/login" 
+          <a
+            href={FORUM_LOGIN_URL}
             className="text-primary-600 hover:text-primary-500 font-medium"
           >
             立即登录
-          </Link>
+          </a>
         </div>
       </Card>
     </div>

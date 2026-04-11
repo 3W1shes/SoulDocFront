@@ -4,6 +4,7 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { useNavigate, useParams } from 'react-router-dom'
 import { authService } from '@/services/authService'
 import { useAuthStore } from '@/stores/authStore'
+import { FORUM_LOGIN_URL, FORUM_REGISTER_URL } from '@/App'
 
 const { Title, Text } = Typography
 
@@ -54,11 +55,11 @@ const EmailVerificationPage: React.FC = () => {
   }, [token, navigate, setUser])
 
   const handleGoToLogin = () => {
-    navigate('/login')
+    window.location.href = FORUM_LOGIN_URL
   }
 
   const handleGoToRegister = () => {
-    navigate('/register')
+    window.location.href = FORUM_REGISTER_URL
   }
 
   if (loading) {

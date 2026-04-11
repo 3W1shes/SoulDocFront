@@ -3,6 +3,7 @@ import { Spin, Result, Button } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import { FORUM_LOGIN_URL } from '@/App'
 
 const OAuthCallbackPage: React.FC = () => {
   const [searchParams] = useSearchParams()
@@ -90,7 +91,7 @@ const OAuthCallbackPage: React.FC = () => {
         title="登录失败"
         subTitle={errorMessage}
         extra={[
-          <Button type="primary" key="retry" onClick={() => navigate('/login')}>
+          <Button type="primary" key="retry" href={FORUM_LOGIN_URL}>
             返回登录
           </Button>
         ]}

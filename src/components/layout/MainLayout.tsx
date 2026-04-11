@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import { FORUM_LOGIN_URL } from '@/App'
 import NotificationDropdown from '@/components/notifications/NotificationDropdown'
 import type { MenuProps } from 'antd'
 
@@ -52,7 +53,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       label: '退出登录',
       onClick: () => {
         logout()
-        navigate('/login')
+        window.location.replace(FORUM_LOGIN_URL)
       },
     },
   ]

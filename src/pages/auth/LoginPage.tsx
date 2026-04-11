@@ -5,6 +5,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import type { LoginCredentials } from '@/types'
 
+const FORUM_LOGIN_URL = 'http://43.106.96.48/forum/login'
+const FORUM_REGISTER_URL = 'http://43.106.96.48/forum/register'
+
 const LoginPage: React.FC = () => {
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -26,9 +29,8 @@ const LoginPage: React.FC = () => {
     }
   }
 
-  const handleGoogleLogin = () => {
-    // 重定向到通过 Kong 网关的 Google OAuth 登录端点
-    window.location.href = '/api/auth/login/google'
+  const handleForumLogin = () => {
+    window.location.href = FORUM_LOGIN_URL
   }
 
   return (
@@ -100,13 +102,13 @@ const LoginPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button 
-            type="primary" 
-            htmlType="submit" 
-            loading={loading}
+          <Button
+            type="primary"
+            htmlType="button"
+            href={FORUM_LOGIN_URL}
             className="w-full h-12 text-base font-medium"
           >
-            {loading ? '登录中...' : '登录'}
+            前往论坛登录
           </Button>
         </Form.Item>
       </Form>
@@ -117,6 +119,7 @@ const LoginPage: React.FC = () => {
       <div className="space-y-3">
         <Button 
           icon={<GithubOutlined />} 
+          href={FORUM_LOGIN_URL}
           className="w-full h-12 border-gray-300 text-gray-700 hover:border-gray-400"
         >
           使用 GitHub 登录
@@ -124,7 +127,7 @@ const LoginPage: React.FC = () => {
         
         <Button 
           icon={<GoogleOutlined />} 
-          onClick={handleGoogleLogin}
+          onClick={handleForumLogin}
           className="w-full h-12 border-gray-300 text-gray-700 hover:border-gray-400"
         >
           使用 Google 登录
@@ -134,12 +137,12 @@ const LoginPage: React.FC = () => {
       {/* 注册链接 */}
       <div className="text-center mt-6">
         <span className="text-gray-600">还没有账户？ </span>
-        <Link 
-          to="/register" 
+        <a
+          href={FORUM_REGISTER_URL}
           className="text-primary-600 hover:text-primary-500 font-medium"
         >
           立即注册
-        </Link>
+        </a>
       </div>
     </div>
   )
