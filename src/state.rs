@@ -1,0 +1,37 @@
+use crate::models::User;
+use gloo_storage::{LocalStorage, Storage};
+
+const TOKEN_KEY: &str = "souldoc_token";
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AuthState {
+    pub token: Option<String>,
+    pub user: Option<User>,
+}
+
+impl AuthState {
+    pub fn init() -> Self {
+        let token = LocalStorage::get::<String>(TOKEN_KEY)
+            .ok()
+            .or_else(|| LocalStorage::get::<String>("jwt_token").ok())
+            .or_else(|| LocalStorage::get::<String>("auth_token").ok())
+            .or_else(|| LocalStorage::get::<String>("token").ok());
+        Self { token, user: None }
+    }
+
+    pub fn login(&mut self, token: String, user: User) {
+        LocalStorage::set(TOKEN_KEY, &token).ok();
+        self.token = Some(token);
+        self.user = Some(user);
+    }
+
+    pub fn logout(&mut self) {
+        LocalStorage::delete(TOKEN_KEY);
+        self.token = None;
+        self.user = None;
+    }
+
+    pub fn is_authenticated(&self) -> bool {
+        self.token.is_some()
+    }
+}
