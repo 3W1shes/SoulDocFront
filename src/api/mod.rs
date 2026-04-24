@@ -26,7 +26,7 @@ use gloo_storage::{LocalStorage, Storage};
 use serde::{de::DeserializeOwned, Serialize};
 
 const TOKEN_KEY: &str = "souldoc_token";
-pub const BASE_URL: &str = "http://localhost:3001";
+pub const BASE_URL: &str = "";
 
 pub fn get_token() -> Option<String> {
     LocalStorage::get::<String>(TOKEN_KEY)
