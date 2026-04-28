@@ -1,4 +1,4 @@
-use crate::api::developer as dev_api;
+﻿use crate::api::developer as dev_api;
 use dioxus::prelude::*;
 use serde_json::Value;
 
@@ -23,7 +23,7 @@ pub fn Developer() -> Element {
     let mut action_msg = use_signal(|| String::new());
 
     rsx! {
-        document::Title { "开发者平台 — SoulDoc" }
+        document::Title { "开发者平台 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",
@@ -150,7 +150,7 @@ pub fn Developer() -> Element {
                             div { style: "text-align:center;padding:60px;color:var(--muted);",
                                 div { style: "font-size:48px;margin-bottom:12px;", "🔑" }
                                 h3 { "暂无 API 密钥" }
-                                p { style: "font-size:13px;margin-bottom:20px;", "创建 API 密钥以通过编程方式访问 SoulDoc" }
+                                p { style: "font-size:13px;margin-bottom:20px;", "创建 API 密钥以通过编程方式访问 SoulBook" }
                                 button { class: "btn btn-primary", onclick: move |_| show_create_key.set(true), "＋ 创建第一个 API 密钥" }
                             }
                             div { class: "card",

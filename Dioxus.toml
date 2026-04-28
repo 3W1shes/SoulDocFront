@@ -1,7 +1,7 @@
-[application]
-name = "SoulDoc UI"
+﻿[application]
+name = "SoulBook UI"
 default_platform = "web"
 out_dir = "dist"
 
 [web.app]
-title = "SoulDoc — AI 原生知识工作台"
+title = "SoulBook — AI 原生知识工作台"

@@ -1,4 +1,4 @@
-use crate::api::members as members_api;
+﻿use crate::api::members as members_api;
 use crate::api::spaces as spaces_api;
 use crate::models::Space;
 use crate::routes::Route;
@@ -46,7 +46,7 @@ pub fn SpaceOverview() -> Element {
     };
 
     rsx! {
-        document::Title { "空间概览 — SoulDoc" }
+        document::Title { "空间概览 — SoulBook" }
         div { class: "page-content",
             // Space selector
             div { class: "card", style: "margin-bottom:20px;",

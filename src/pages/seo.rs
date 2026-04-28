@@ -1,4 +1,4 @@
-use crate::api::publish as pub_api;
+﻿use crate::api::publish as pub_api;
 use crate::api::spaces as spaces_api;
 use dioxus::prelude::*;
 use serde_json::Value;
@@ -86,7 +86,7 @@ pub fn Seo() -> Element {
     };
 
     rsx! {
-        document::Title { "SEO 与发布 — SoulDoc" }
+        document::Title { "SEO 与发布 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

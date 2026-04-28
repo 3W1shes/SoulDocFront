@@ -1,4 +1,4 @@
-use crate::api::notifications as notif_api;
+﻿use crate::api::notifications as notif_api;
 use crate::models::Notification;
 use dioxus::prelude::*;
 
@@ -13,7 +13,7 @@ pub fn Notifications() -> Element {
     };
 
     rsx! {
-        document::Title { "通知中心 — SoulDoc" }
+        document::Title { "通知中心 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

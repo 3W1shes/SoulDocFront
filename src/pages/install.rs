@@ -1,4 +1,4 @@
-use crate::routes::Route;
+﻿use crate::routes::Route;
 use dioxus::prelude::*;
 
 #[component]
@@ -7,7 +7,7 @@ pub fn Install() -> Element {
     let navigator = use_navigator();
 
     rsx! {
-        document::Title { "安装向导 — SoulDoc" }
+        document::Title { "安装向导 — SoulBook" }
         div { style: "min-height:100vh;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;",
             // 品牌标识
             div { style: "display:flex;align-items:center;gap:12px;margin-bottom:40px;",
@@ -15,7 +15,7 @@ pub fn Install() -> Element {
                     "SD"
                 }
                 div {
-                    h1 { style: "font-size:22px;font-weight:700;letter-spacing:-.3px;", "SoulDoc" }
+                    h1 { style: "font-size:22px;font-weight:700;letter-spacing:-.3px;", "SoulBook" }
                     p { style: "font-size:12.5px;color:var(--muted);", "安装向导" }
                 }
             }
@@ -101,11 +101,11 @@ pub fn Install() -> Element {
                         div { style: "text-align:center;padding:24px;",
                             div { style: "font-size:56px;margin-bottom:16px;", "🎉" }
                             h2 { style: "font-size:22px;font-weight:700;margin-bottom:8px;", "安装完成！" }
-                            p { style: "color:var(--muted);margin-bottom:24px;", "SoulDoc 已成功安装并准备就绪。" }
+                            p { style: "color:var(--muted);margin-bottom:24px;", "SoulBook 已成功安装并准备就绪。" }
                             button {
                                 class: "btn btn-primary btn-lg",
                                 onclick: move |_| { navigator.push(Route::Login {}); },
-                                "进入 SoulDoc →"
+                                "进入 SoulBook →"
                             }
                         }
                     }

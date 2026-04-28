@@ -1,4 +1,4 @@
-use crate::api::auth as auth_api;
+﻿use crate::api::auth as auth_api;
 use crate::routes::Route;
 use crate::state::AuthState;
 use dioxus::prelude::*;
@@ -55,7 +55,7 @@ pub fn Login() -> Element {
     };
 
     rsx! {
-        document::Title { "登录 — SoulDoc" }
+        document::Title { "登录 — SoulBook" }
         div { style: "min-height:100vh;display:flex;background:var(--bg);",
             // Left brand panel
             div { style: "flex:0 0 420px;background:linear-gradient(160deg,#1e1b4b 0%,#312e81 50%,#1e3a5f 100%);display:flex;flex-direction:column;justify-content:center;padding:60px 52px;",
@@ -63,7 +63,7 @@ pub fn Login() -> Element {
                     div { style: "width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;letter-spacing:.08em;margin-bottom:20px;",
                         "SD"
                     }
-                    h1 { style: "font-size:28px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:10px;", "SoulDoc" }
+                    h1 { style: "font-size:28px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:10px;", "SoulBook" }
                     p { style: "font-size:15px;color:rgba(255,255,255,.65);line-height:1.7;",
                         "AI 原生知识工作台。人类与 AI 共享同一套角色与权限体系，协同生产、治理和发布知识。"
                     }
@@ -80,7 +80,7 @@ pub fn Login() -> Element {
             div { style: "flex:1;display:flex;align-items:center;justify-content:center;padding:48px;",
                 div { style: "width:100%;max-width:420px;",
                     h2 { style: "font-size:26px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px;", "欢迎回来" }
-                    p { style: "color:var(--muted);margin-bottom:32px;", "登录到您的 SoulDoc 账户" }
+                    p { style: "color:var(--muted);margin-bottom:32px;", "登录到您的 SoulBook 账户" }
 
                     form { onsubmit: handle_login,
                         div { class: "form-group",
@@ -142,7 +142,7 @@ pub fn Login() -> Element {
                     div { style: "margin-top:24px;text-align:center;",
                         p { style: "font-size:13px;color:var(--muted);",
                             "还没有账户？ "
-                            Link { to: Route::Install {}, style: "color:var(--primary);font-weight:500;", "安装 SoulDoc" }
+                            Link { to: Route::Install {}, style: "color:var(--primary);font-weight:500;", "安装 SoulBook" }
                         }
                     }
                 }

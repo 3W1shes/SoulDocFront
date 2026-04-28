@@ -1,4 +1,4 @@
-use crate::api::spaces as spaces_api;
+﻿use crate::api::spaces as spaces_api;
 use crate::models::Space;
 use crate::routes::Route;
 use dioxus::prelude::*;
@@ -55,7 +55,7 @@ pub fn Spaces() -> Element {
     };
 
     rsx! {
-        document::Title { "知识空间 — SoulDoc" }
+        document::Title { "知识空间 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

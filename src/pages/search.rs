@@ -1,4 +1,4 @@
-use crate::api::search as search_api;
+﻿use crate::api::search as search_api;
 use crate::models::SearchResult;
 use dioxus::prelude::*;
 
@@ -31,7 +31,7 @@ pub fn Search() -> Element {
     });
 
     rsx! {
-        document::Title { "全局搜索 — SoulDoc" }
+        document::Title { "全局搜索 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

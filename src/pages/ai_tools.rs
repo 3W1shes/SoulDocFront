@@ -1,4 +1,4 @@
-use crate::api::tool_configs as cfg_api;
+﻿use crate::api::tool_configs as cfg_api;
 use dioxus::prelude::*;
 use serde_json::Value;
 
@@ -7,7 +7,7 @@ pub fn AiTools() -> Element {
     let configs_res = use_resource(|| async move { cfg_api::list_tool_configs().await });
 
     rsx! {
-        document::Title { "AI 工具配置 — SoulDoc" }
+        document::Title { "AI 工具配置 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+pub mod ai_agent;
 pub mod ai_tasks;
 pub mod auth;
 pub mod change_requests;
@@ -25,7 +26,7 @@ use gloo_net::http::Request;
 use gloo_storage::{LocalStorage, Storage};
 use serde::{de::DeserializeOwned, Serialize};
 
-const TOKEN_KEY: &str = "souldoc_token";
+const TOKEN_KEY: &str = "soulbook_token";
 pub const BASE_URL: &str = "http://localhost:3001";
 
 pub fn get_token() -> Option<String> {

@@ -1,4 +1,4 @@
-use crate::api::documents as docs_api;
+﻿use crate::api::documents as docs_api;
 use crate::api::spaces as spaces_api;
 use crate::api::versions as ver_api;
 use crate::models::Version;
@@ -43,7 +43,7 @@ pub fn Versions() -> Element {
     });
 
     rsx! {
-        document::Title { "版本历史 — SoulDoc" }
+        document::Title { "版本历史 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

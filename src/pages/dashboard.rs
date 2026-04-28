@@ -1,4 +1,4 @@
-use crate::api::{notifications as notif_api, spaces as spaces_api, stats as stats_api};
+﻿use crate::api::{notifications as notif_api, spaces as spaces_api, stats as stats_api};
 use crate::models::Space;
 use crate::routes::Route;
 use crate::state::AuthState;
@@ -22,7 +22,7 @@ pub fn Dashboard() -> Element {
     let notif_res = use_resource(|| async move { notif_api::get_unread_count().await });
 
     rsx! {
-        document::Title { "首页工作台 — SoulDoc" }
+        document::Title { "首页工作台 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

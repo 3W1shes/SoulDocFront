@@ -1,4 +1,4 @@
-use crate::api::language as lang_api;
+﻿use crate::api::language as lang_api;
 use crate::api::spaces as spaces_api;
 use dioxus::prelude::*;
 
@@ -52,7 +52,7 @@ pub fn Language() -> Element {
     };
 
     rsx! {
-        document::Title { "语言版本 — SoulDoc" }
+        document::Title { "语言版本 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

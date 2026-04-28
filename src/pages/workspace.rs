@@ -1,4 +1,4 @@
-use crate::api::publications as pub_api;
+﻿use crate::api::publications as pub_api;
 use crate::api::spaces as spaces_api;
 use dioxus::prelude::*;
 
@@ -28,7 +28,7 @@ pub fn Workspace() -> Element {
     });
 
     rsx! {
-        document::Title { "发布站点 — SoulDoc" }
+        document::Title { "发布站点 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",

@@ -1,4 +1,4 @@
-use crate::api::git_sync as git_api;
+﻿use crate::api::git_sync as git_api;
 use crate::api::spaces as spaces_api;
 use dioxus::prelude::*;
 use serde_json::Value;
@@ -43,7 +43,7 @@ pub fn GitSync() -> Element {
     };
 
     rsx! {
-        document::Title { "GitHub 同步 — SoulDoc" }
+        document::Title { "GitHub 同步 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",
@@ -100,8 +100,8 @@ pub fn GitSync() -> Element {
             div { class: "card", style: "margin-bottom:24px;",
                 div { class: "card-header", h3 { "GitHub 同步工作流" } }
                 div { class: "grid-2", style: "gap:16px;",
-                    WorkflowStep { num: "1", title: "SoulDoc → GitHub", desc: "文档发布时，自动创建 PR 到目标分支，包含 Markdown 和资源文件。" }
-                    WorkflowStep { num: "2", title: "GitHub → SoulDoc", desc: "监听仓库 Push 事件，自动同步变更到对应 Space 文档。" }
+                    WorkflowStep { num: "1", title: "SoulBook → GitHub", desc: "文档发布时，自动创建 PR 到目标分支，包含 Markdown 和资源文件。" }
+                    WorkflowStep { num: "2", title: "GitHub → SoulBook", desc: "监听仓库 Push 事件，自动同步变更到对应 Space 文档。" }
                     WorkflowStep { num: "3", title: "冲突处理", desc: "检测到冲突时，暂停自动同步，通知 Owner 手动 merge。" }
                     WorkflowStep { num: "4", title: "审计日志", desc: "每次同步操作均记录到审计日志，支持回溯和恢复。" }
                 }

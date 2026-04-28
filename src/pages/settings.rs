@@ -1,4 +1,4 @@
-use crate::api::settings as settings_api;
+﻿use crate::api::settings as settings_api;
 use dioxus::prelude::*;
 use serde_json::Value;
 
@@ -77,7 +77,7 @@ pub fn Settings() -> Element {
     };
 
     rsx! {
-        document::Title { "系统设置 — SoulDoc" }
+        document::Title { "系统设置 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",
@@ -115,7 +115,7 @@ pub fn Settings() -> Element {
                         let ai_cfg = data.get("ai").cloned().unwrap_or(serde_json::json!({}));
                         let security = data.get("security").cloned().unwrap_or(serde_json::json!({}));
 
-                        let platform_name = general.get("platform_name").and_then(|v| v.as_str()).unwrap_or("SoulDoc").to_string();
+                        let platform_name = general.get("platform_name").and_then(|v| v.as_str()).unwrap_or("SoulBook").to_string();
                         let default_model = ai_cfg.get("default_model").and_then(|v| v.as_str()).unwrap_or("claude-3-5-sonnet").to_string();
                         let session_timeout = security.get("session_timeout").and_then(|v| v.as_i64()).unwrap_or(480).to_string();
 

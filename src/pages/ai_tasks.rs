@@ -1,4 +1,4 @@
-use crate::api::ai_tasks as tasks_api;
+﻿use crate::api::ai_tasks as tasks_api;
 use crate::api::spaces as spaces_api;
 use dioxus::prelude::*;
 
@@ -60,7 +60,7 @@ pub fn AiTasks() -> Element {
     };
 
     rsx! {
-        document::Title { "AI 任务中心 — SoulDoc" }
+        document::Title { "AI 任务中心 — SoulBook" }
         div { class: "page-content",
             div { class: "page-header",
                 div { class: "page-header-left",
