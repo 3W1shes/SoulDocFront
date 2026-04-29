@@ -89,7 +89,7 @@ pub fn Login() -> Element {
                                 id: "email",
                                 class: "input",
                                 r#type: "email",
-                                placeholder: "admin@souldoc.io",
+                                placeholder: "admin@soulbook.io",
                                 value: "{email}",
                                 oninput: move |e| email.set(e.value())
                             }

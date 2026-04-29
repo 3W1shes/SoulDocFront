@@ -8,7 +8,7 @@ use gloo_storage::{LocalStorage, Storage};
 fn fmt_inline_js(prefix: &str, suffix: &str, placeholder: &str) -> String {
     format!(
         r#"(function(){{
-  var ta=document.getElementById('souldoc-editor-ta');
+  var ta=document.getElementById('soulbook-editor-ta');
   if(!ta){{dioxus.send(null);return;}}
   var s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;
   var sel=v.substring(s,e)||'{placeholder}';
@@ -23,7 +23,7 @@ fn fmt_inline_js(prefix: &str, suffix: &str, placeholder: &str) -> String {
 fn fmt_line_js(prefix: &str) -> String {
     format!(
         r#"(function(){{
-  var ta=document.getElementById('souldoc-editor-ta');
+  var ta=document.getElementById('soulbook-editor-ta');
   if(!ta){{dioxus.send(null);return;}}
   var s=ta.selectionStart,v=ta.value;
   var ls=v.lastIndexOf('\n',s-1)+1;
@@ -40,7 +40,7 @@ fn fmt_line_js(prefix: &str) -> String {
 fn fmt_block_js(open: &str, close: &str, placeholder: &str) -> String {
     format!(
         r#"(function(){{
-  var ta=document.getElementById('souldoc-editor-ta');
+  var ta=document.getElementById('soulbook-editor-ta');
   if(!ta){{dioxus.send(null);return;}}
   var s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;
   var sel=v.substring(s,e)||'{placeholder}';
@@ -54,7 +54,7 @@ fn fmt_block_js(open: &str, close: &str, placeholder: &str) -> String {
 fn fmt_color_js(color: &str) -> String {
     format!(
         r#"(function(){{
-  var ta=document.getElementById('souldoc-editor-ta');
+  var ta=document.getElementById('soulbook-editor-ta');
   if(!ta){{dioxus.send(null);return;}}
   var s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;
   var sel=v.substring(s,e)||'彩色文字';
@@ -67,7 +67,7 @@ fn fmt_color_js(color: &str) -> String {
 fn fmt_size_js(size: &str) -> String {
     format!(
         r#"(function(){{
-  var ta=document.getElementById('souldoc-editor-ta');
+  var ta=document.getElementById('soulbook-editor-ta');
   if(!ta){{dioxus.send(null);return;}}
   var s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;
   var sel=v.substring(s,e)||'文字';
@@ -321,7 +321,13 @@ pub fn Editor() -> Element {
                                 button { class: "toolbar-btn", title: "无序列表",
                                     onclick: move |_| { let js = fmt_line_js("- "); apply_fmt(js); }, "≡" }
                                 button { class: "toolbar-btn", title: "有序列表",
-                                    onclick: move |_| { let js = fmt_line_js("1. "); apply_fmt(js); }, "1." }
+                                    onclick: move |_| { let js = fmt_line_js("1. "); apply_fmt(js); }, "1. 列表" }
+                                button { class: "toolbar-btn", title: "水平分隔线",
+                                    style: "letter-spacing:-1px;",
+                                    onclick: move |_| {
+                                        let js = r#"(function(){var ta=document.getElementById('soulbook-editor-ta');if(!ta){dioxus.send(null);return;}var s=ta.selectionStart,v=ta.value;dioxus.send(v.substring(0,s)+'\n---\n'+v.substring(s));})();"#;
+                                        apply_fmt(js.to_string());
+                                    }, "───" }
                             }
 
                             // Link / Image / Table / Code block
@@ -394,7 +400,7 @@ pub fn Editor() -> Element {
                                     oninput: move |e| title.set(e.value()),
                                 }
                                 textarea {
-                                    id: "souldoc-editor-ta",
+                                    id: "soulbook-editor-ta",
                                     style: "width:100%;min-height:calc(100vh - 260px);outline:none;border:none;background:transparent;color:var(--text2);line-height:1.9;font-size:14.5px;resize:none;font-family:inherit;tab-size:4;",
                                     placeholder: "开始写作… 支持 Markdown 与 HTML 内联样式\n\n快捷操作：工具栏可格式化选中文字，颜色/字号按钮包裹选中内容",
                                     value: "{content}",

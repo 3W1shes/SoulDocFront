@@ -1,6 +1,6 @@
-# SoulDoc UI — Rust + Dioxus 前端
+# SoulBook UI — Rust + Dioxus 前端
 
-SoulDoc V5 的 Dioxus 0.7 组件化前端，覆盖全部 25 个原型页面。
+SoulBook V5 的 Dioxus 0.7 组件化前端，覆盖全部 25 个原型页面。
 
 ## 本地预览
 

@@ -55,11 +55,11 @@ pub fn Install() -> Element {
                             }
                             div { class: "form-group",
                                 label { class: "form-label", "命名空间" }
-                                input { class: "input", value: "souldoc" }
+                                input { class: "input", value: "soulbook" }
                             }
                             div { class: "form-group",
                                 label { class: "form-label", "数据库名" }
-                                input { class: "input", value: "souldoc_prod" }
+                                input { class: "input", value: "soulbook_prod" }
                             }
                             div { class: "form-group",
                                 label { class: "form-label", "用户名" }

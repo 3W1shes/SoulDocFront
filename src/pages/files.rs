@@ -66,7 +66,7 @@ pub fn Files() -> Element {
       form.append('file', files[i]);
       form.append('space_id', '{space_id}');
       try {{
-        var r = await fetch('http://localhost:3001/api/docs/files', {{
+        var r = await fetch('/api/docs/files', {{
           method: 'POST',
           headers: {{'Authorization': 'Bearer {token}'}},
           body: form

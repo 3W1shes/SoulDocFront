@@ -180,7 +180,7 @@ pub fn Seo() -> Element {
                             div { class: "card-header", h3 { "Google 预览" } }
                             div { class: "seo-preview",
                                 p { class: "seo-title", if seo_title().is_empty() { "（标题）" } else { "{seo_title}" } }
-                                p { class: "seo-url", "docs.souldoc.io › {selected_space}" }
+                                p { class: "seo-url", "docs.soulbook.io › {selected_space}" }
                                 p { class: "seo-desc", if seo_desc().is_empty() { "（描述）" } else { "{seo_desc}" } }
                             }
                         }

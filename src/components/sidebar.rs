@@ -155,12 +155,12 @@ pub fn Sidebar() -> Element {
 #[component]
 fn WorkspaceSwitcher(open: Signal<bool>) -> Element {
     let mut open = open;
-    let mut current = use_signal(|| "team_souldoc");
+    let mut current = use_signal(|| "team_soulbook");
     let navigator = use_navigator();
 
     let (ws_letter, ws_name, ws_color) = match current() {
         "personal" => ("我", "个人工作区", "#64748b"),
-        "team_souldoc" => ("S", "SoulBook 团队", "#4f46e5"),
+        "team_soulbook" => ("S", "SoulBook 团队", "#4f46e5"),
         "team_dev" => ("P", "产品研发团队", "#2563eb"),
         "team_mkt" => ("M", "Marketing", "#7c3aed"),
         _ => ("S", "SoulBook 团队", "#4f46e5"),
@@ -204,8 +204,8 @@ fn WorkspaceSwitcher(open: Signal<bool>) -> Element {
 
                     WsItem {
                         icon: "S", icon_bg: "#4f46e5", name: "SoulBook 团队", badge: "管理员",
-                        selected: current() == "team_souldoc",
-                        onclick: move |_| { current.set("team_souldoc"); open.set(false); }
+                        selected: current() == "team_soulbook",
+                        onclick: move |_| { current.set("team_soulbook"); open.set(false); }
                     }
                     WsItem {
                         icon: "P", icon_bg: "#2563eb", name: "产品研发团队", badge: "成员",
@@ -225,7 +225,7 @@ fn WorkspaceSwitcher(open: Signal<bool>) -> Element {
                         onclick: {
                             let navigator = navigator.clone();
                             move |_| {
-                                let _ = LocalStorage::set("souldoc_open_create_space", "1");
+                                let _ = LocalStorage::set("soulbook_open_create_space", "1");
                                 open.set(false);
                                 navigator.push(Route::Spaces {});
                             }

@@ -1,7 +1,8 @@
-﻿[application]
+[application]
 name = "SoulBook UI"
 default_platform = "web"
 out_dir = "dist"
 
 [web.app]
 title = "SoulBook — AI 原生知识工作台"
+base_path = "docs"
